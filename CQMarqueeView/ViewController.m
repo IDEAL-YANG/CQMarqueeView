@@ -7,8 +7,9 @@
 //
 
 #import "ViewController.h"
+#import "CQMarqueeView.h"
 
-@interface ViewController ()
+@interface ViewController ()<CQMarqueeViewDelegate>
 
 @end
 
@@ -17,13 +18,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    CQMarqueeView *marqueeView = [[CQMarqueeView alloc] initWithFrame:CGRectMake(0, 90, self.view.frame.size.width, 30)];
+    [self.view addSubview:marqueeView];
+    marqueeView.marqueeText = @"李知恩，艺名IU，1993年5月16日出生于韩国首尔特别市，韩国女歌手、演员、主持人。";
+    marqueeView.delegate = self;
 }
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+// 跑马灯view上的关闭按钮点击时回调
+- (void)marqueeView:(CQMarqueeView *)marqueeView closeButtonDidClick:(UIButton *)sender {
+    [marqueeView removeFromSuperview];
+    marqueeView = nil;
+    NSLog(@"点击了关闭按钮");
 }
-
 
 @end
