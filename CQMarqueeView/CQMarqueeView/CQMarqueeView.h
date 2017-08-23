@@ -19,8 +19,8 @@
 
 @interface CQMarqueeView : UIView
 
-/** 跑马灯的文字 */
-@property (nonatomic, copy) NSString *marqueeText;
+/** 跑马灯展示的文本数组 */
+@property (nonatomic, strong) NSArray *marqueeTextArray;
 
 @property (nonatomic, weak) id <CQMarqueeViewDelegate> delegate;
 

@@ -21,7 +21,7 @@
     
     CQMarqueeView *marqueeView = [[CQMarqueeView alloc] initWithFrame:CGRectMake(0, 90, self.view.frame.size.width, 30)];
     [self.view addSubview:marqueeView];
-    marqueeView.marqueeText = @"李知恩，艺名IU，1993年5月16日出生于韩国首尔特别市，韩国女歌手、演员、主持人。";
+    marqueeView.marqueeTextArray = @[@"呵呵呵哒🙄", @"串串香😊" ,@"interesting有趣"];
     marqueeView.delegate = self;
 }
 

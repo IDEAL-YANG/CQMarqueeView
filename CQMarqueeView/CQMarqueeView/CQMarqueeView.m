@@ -69,33 +69,41 @@
     }
 }
 
-#pragma mark - 赋值跑马灯文字
-/** 赋值跑马灯文字 */
-- (void)setMarqueeText:(NSString *)marqueeText {
-    _marqueeText = marqueeText;
+#pragma mark - 赋值跑马灯文本数组
+/** 赋值跑马灯文本数组 */
+- (void)setMarqueeTextArray:(NSArray *)marqueeTextArray {
+    _marqueeTextArray = marqueeTextArray;
     
-    _marqueeLabel.text = _marqueeText;
-    [_marqueeLabel sizeToFit];
-    _marqueeLabel.centerY = self.height / 2;
+    // 默认展示第一条
+    [self setMarqueeText:_marqueeTextArray.firstObject];
+    // 从最右边开始移动
+    _marqueeLabel.x = _marqueeLabel.superview.width;
     
     if (_timer) {
         [_timer invalidate];
         _timer = nil;
     }
     
-    // 从最右边开始跑
-    _marqueeLabel.x = self.width - 41 - 38;
-    
     _timer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(refreshMarqueeLabelFrame) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 }
 
-/** 刷新跑马灯label的位置 */
+/** 改变label位置 */
 - (void)refreshMarqueeLabelFrame {
-    _marqueeLabel.x -= 0.3;
-    if (_marqueeLabel.maxX <= 0) {
-        _marqueeLabel.x = self.width - 41 - 38;
+    static int i = 0;
+    _marqueeLabel.maxX -= 0.3;
+    if (_marqueeLabel.maxX <= 0) { // 当前信息跑完
+        i ++;
+        _marqueeLabel.x = self.width - 41 - 38; // 回到最右边
+        [self setMarqueeText:_marqueeTextArray[i % self.marqueeTextArray.count]];
     }
+}
+
+/** 赋值跑马灯文本 */
+- (void)setMarqueeText:(NSString *)marqueeText {
+    _marqueeLabel.text = marqueeText;
+    [_marqueeLabel sizeToFit];
+    _marqueeLabel.centerY = self.height / 2;
 }
 
 @end
