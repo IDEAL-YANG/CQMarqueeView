@@ -14,6 +14,8 @@
     UILabel *_marqueeLabel;
     /** 控制跑马灯的timer */
     NSTimer *_timer;
+    
+    NSInteger _count;
 }
 
 #pragma mark - 构造方法
@@ -84,18 +86,18 @@
         _timer = nil;
     }
     
+    _count = 0;
     _timer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(refreshMarqueeLabelFrame) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 }
 
 /** 改变label位置 */
 - (void)refreshMarqueeLabelFrame {
-    static int i = 0;
     _marqueeLabel.maxX -= 0.3;
     if (_marqueeLabel.maxX <= 0) { // 当前信息跑完
-        i ++;
+        _count ++;
         _marqueeLabel.x = self.width - 41 - 38; // 回到最右边
-        [self setMarqueeText:_marqueeTextArray[i % self.marqueeTextArray.count]];
+        [self setMarqueeText:_marqueeTextArray[_count % self.marqueeTextArray.count]];
     }
 }
 
