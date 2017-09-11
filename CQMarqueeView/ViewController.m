@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "CQMarqueeView.h"
+#import "UIView+frameAdjust.h"
 
 @interface ViewController ()<CQMarqueeViewDelegate>
 
@@ -27,9 +28,12 @@
 
 // 跑马灯view上的关闭按钮点击时回调
 - (void)marqueeView:(CQMarqueeView *)marqueeView closeButtonDidClick:(UIButton *)sender {
-    [marqueeView removeFromSuperview];
-    marqueeView = nil;
     NSLog(@"点击了关闭按钮");
+    [UIView animateWithDuration:1 animations:^{
+        marqueeView.height = 0;
+    } completion:^(BOOL finished) {
+        [marqueeView removeFromSuperview];
+    }];
 }
 
 @end

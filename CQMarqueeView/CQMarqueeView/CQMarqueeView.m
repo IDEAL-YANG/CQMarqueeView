@@ -13,7 +13,7 @@
 @implementation CQMarqueeView{
     UILabel *_marqueeLabel;
     /** 控制跑马灯的timer */
-    NSTimer *_timer;
+    CADisplayLink *_displayLink;
     
     NSInteger _count;
 }
@@ -31,6 +31,7 @@
 /** UI搭建 */
 - (void)setUpUI {
     self.backgroundColor = [UIColor colorWithHexString:@"fff4d8"];
+    self.clipsToBounds = YES;
     
     //------- 左边的喇叭 -------//
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(13, 9, 16, 12)];
@@ -61,9 +62,9 @@
 #pragma mark - 关闭按钮点击
 /** 关闭按钮点击 */
 - (void)closeButtonClicked:(UIButton *)sender {
-    if (_timer) {
-        [_timer invalidate];
-        _timer = nil;
+    if (_displayLink) {
+        [_displayLink invalidate];
+        _displayLink = nil;
     }
     
     if ([self.delegate respondsToSelector:@selector(marqueeView:closeButtonDidClick:)]) {
@@ -81,19 +82,19 @@
     // 从最右边开始移动
     _marqueeLabel.x = _marqueeLabel.superview.width;
     
-    if (_timer) {
-        [_timer invalidate];
-        _timer = nil;
+    if (_displayLink) {
+        [_displayLink invalidate];
+        _displayLink = nil;
     }
     
     _count = 0;
-    _timer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(refreshMarqueeLabelFrame) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+    _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(refreshMarqueeLabelFrame)];
+    [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 }
 
 /** 改变label位置 */
 - (void)refreshMarqueeLabelFrame {
-    _marqueeLabel.maxX -= 0.3;
+    _marqueeLabel.maxX -= 1;
     if (_marqueeLabel.maxX <= 0) { // 当前信息跑完
         _count ++;
         _marqueeLabel.x = self.width - 41 - 38; // 回到最右边
